@@ -1,7 +1,16 @@
 cutoff = {}
 
+# Al
 cutoff[(13,)] = 3.6
 cutoff[('Al',)] = 3.6
+
+# Cu
+cutoff[(29,)] = 3.6
+cutoff[('Cu',)] = 3.6
+
+# Zr
+cutoff[(40,)] = 3.6
+cutoff[('Zr',)] = 3.6
 
 # Zr Cu Al
 #cutoff[(40,40)] = 3.6
