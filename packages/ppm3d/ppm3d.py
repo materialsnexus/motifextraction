@@ -25,7 +25,7 @@ os.chdir(cwd)
 def find_map(model, target, k=3, n_choosek_flag=True):
     model = np.array(model, np.float)
     target = np.array(target, np.float)
-    output_map = np.zeros((model.shape[0],), dtype=ctypes.c_int)
+    output_map = np.zeros((model.shape[0],), dtype=np.int)
 
     libm.point_match(model, model.shape[0], target, target.shape[0], k, output_map, n_choosek_flag)
     return output_map - 1
