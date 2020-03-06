@@ -22,13 +22,28 @@ libm.point_match.restype = None
 os.chdir(cwd)
 
 
-def find_map(model, target, k=3, n_choosek_flag=True):
+def find_map(model, target, k=3, n_choosek_flag=True, weights=None):
     model = np.array(model, np.float)
     target = np.array(target, np.float)
     output_map = np.zeros((model.shape[0],), dtype=np.int)
+    if weights is None:
+        weights = np.ones((model.shape[0],), dtype=np.float)
+    else:
+        weights = np.array(weights, np.float)
 
-    libm.point_match(model, model.shape[0], target, target.shape[0], k, output_map, n_choosek_flag)
-    return output_map - 1
+    libm = np.ctypeslib.load_library('point_match.so', '.')
+
+    # input type ppm3d function
+    # must be a double array, with single dimension that is contiguous
+    array_1d_double = npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')
+    array_1d_integer = npct.ndpointer(dtype=np.integer, ndim=1, flags='CONTIGUOUS')
+    array_2d_double = npct.ndpointer(dtype=np.double, ndim=2, flags='CONTIGUOUS')
+
+    # setup the return types and argument types
+    libm.point_match.argtypes = [array_2d_double, ctypes.c_int, array_2d_double, ctypes.c_int, array_1d_double, ctypes.c_int, array_1d_integer, ctypes.c_bool]
+    libm.point_match.restype = np.ctypeslib.ndpointer(dtype=ctypes.c_int, shape=(model.shape[0],))
+    output_map1 = libm.point_match(model, model.shape[0], target, target.shape[0], weights, k, output_map, n_choosek_flag)
+    return output_map1 - 1
 
 
 def absor(A, B, do_scale=False, weight=None):
