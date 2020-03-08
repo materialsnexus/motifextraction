@@ -31,7 +31,7 @@ def find_map(model, target, k=3, n_choosek_flag=True, weights=None):
     else:
         weights = np.array(weights, np.float)
 
-    libm = np.ctypeslib.load_library('point_match.so', '.')
+    libm = np.ctypeslib.load_library('point_match.so', module_directory)
 
     # input type ppm3d function
     # must be a double array, with single dimension that is contiguous
